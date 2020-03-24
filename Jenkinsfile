@@ -1,6 +1,14 @@
 pipeline {
+
+  environment {
+    registry = "192.168.56.133:5000/test/myweb"
+    dockerImage = ""
+  }
+
   agent any
+
   stages {
+
     stage('Checkout Source') {
       steps {
         git 'https://github.com/SPE-RnD/web-test-jenkins.git'
@@ -8,22 +16,20 @@ pipeline {
     }
 
     stage('Build image') {
-      steps {
+      steps{
         script {
           dockerImage = docker.build registry + ":$BUILD_NUMBER"
         }
-
       }
     }
 
     stage('Push Image') {
-      steps {
+      steps{
         script {
           docker.withRegistry( "" ) {
             dockerImage.push()
           }
         }
-
       }
     }
 
@@ -32,13 +38,9 @@ pipeline {
         script {
           kubernetesDeploy(configs: "myweb.yaml", kubeconfigId: "kubeconfig")
         }
-
       }
     }
 
   }
-  environment {
-    registry = '192.168.56.133/test/myweb'
-    dockerImage = ''
-  }
+
 }
