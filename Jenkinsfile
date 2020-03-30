@@ -1,7 +1,7 @@
 pipeline {
 
   environment { 
-    registry = "192.168.56.140:5000/test/myweb" //IP & Port Container Private Registry
+    registry = "192.168.56.140:5000/test/web" //IP & Port Container Private Registry
     dockerImage = ""
   }
 
