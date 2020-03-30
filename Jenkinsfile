@@ -1,7 +1,7 @@
 pipeline {
 
-  environment {
-    registry = "192.168.56.140:5000/test/myweb"
+  environment { 
+    registry = "192.168.56.140:5000/test/myweb" //IP & Port Container Private Registry
     dockerImage = ""
   }
 
@@ -9,25 +9,25 @@ pipeline {
 
   stages {
 
-    stage('Checkout Source') {
+    stage('Checkout Source') { //Untuk menentukan repository
       steps {
-        git 'https://github.com/SPE-RnD/web-test-jenkins.git'
+        git 'https://github.com/SPE-RnD/web-test-jenkins.git' //Link repository yang digunakan 
       }
     }
 
-    stage('Build image') {
+    stage('Build image') { //Untuk membuat image
       steps{
         script {
-          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+          dockerImage = docker.build registry + ":$BUILD_NUMBER" //Perintah untuk build image
         }
       }
     }
 
-    stage('Push Image') {
+    stage('Push Image') { //Untuk Push Image 
       steps{
         script {
           docker.withRegistry( "" ) {
-            dockerImage.push()
+            dockerImage.push() //Perintah untuk push image sesuai dengan registry yang digunakan 
           }
         }
       }
@@ -36,7 +36,7 @@ pipeline {
     stage('Deploy App') {
       steps {
         script {
-          kubernetesDeploy(configs: "myweb.yaml", kubeconfigId: "mykubeconfig")
+          kubernetesDeploy(configs: "myweb.yaml", kubeconfigId: "mykubeconfig") //Menentukan file deployment kubernetes dan token kubernetes
         }
       }
     }
